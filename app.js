@@ -1,11 +1,32 @@
-const {askQuestion, saveSambat} = require('./sambat');
+const {saveSambat, listSambats} = require('./sambat');
 const yargs = require('yargs');
 
 const main = async () => {
-    const name = await askQuestion('Kenalan dulu namanya siapa? ');
-    const sambat = await askQuestion(`Hai ${name}, mau sambat apa hari ini? `);
+    yargs.command({
+        command : 'add',
+        describe : 'Menambahkan sambat',
+        builder : {
+            name : {
+                describe : 'Nama Panggilan',
+                type : 'string',
+                demandOption : true,
+            },
+            sambat : {
+                describe : 'Sambatan apa',
+                type : 'string',
+                demandOption : true,
+            }
+        },
+        handler: (argv) => saveSambat(argv.name, argv.sambat)
+    })
+    yargs.command({
+        command: 'list',
+        describe : 'Menampilkan sambat',
+        builder: {},
+        handler : () => listSambats()
+    })
 
-    saveSambat({name, sambat})
+    yargs.parse();
 }
 
 main();
